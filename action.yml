@@ -21,7 +21,11 @@ runs:
   steps:
     - name: Check out repository
       uses: actions/checkout@v2
-    - name: Run Docker container
-      run: |
-        docker build -t stylespark .
-        docker run -e FILE_EXTENSIONS="${{ inputs.file-extensions }}" -e COMMIT_CHANGES="${{ inputs.commit-changes }}" -e README_PATH="${{ inputs.readme-path }}" stylespark
+        - name: Run Docker container
+          shell: bash
+          run: |
+            docker build -t stylespark .
+            docker run -e FILE_EXTENSIONS="${{ inputs.file-extensions }}" \
+                      -e COMMIT_CHANGES="${{ inputs.commit-changes }}" \
+                      -e README_PATH="${{ inputs.readme-path }}" \
+                      stylespark
