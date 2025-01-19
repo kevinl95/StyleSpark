@@ -1,4 +1,4 @@
-FROM python:3.13.1-alpine3.21 AS base
+FROM python:3.13.1-slim-bullseye AS base
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
@@ -6,7 +6,9 @@ ENV PYTHONFAULTHANDLER=1 \
 
 FROM base AS builder
 
-RUN apk add --no-cache gcc libffi-dev musl-dev git g++ linux-headers
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc libffi-dev musl-dev git g++ \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install "poetry==2.0.1"
 
 COPY pyproject.toml poetry.lock ./
