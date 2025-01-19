@@ -125,7 +125,6 @@ def analyze_code_style(code):
         {code}\n\n
         Please provide the answer in the specified format:
     """
-    print(prompt)
     # Encode the prompt to count tokens
     inputs = tokenizer.encode_plus(
         prompt,
@@ -155,7 +154,6 @@ def analyze_code_style(code):
         attention_mask=inputs["attention_mask"],
         max_new_tokens=75,  # Generate up to 75 new tokens
         num_return_sequences=1,
-        top_p=0.9,  # Balanced sampling of likely tokens
         repetition_penalty=2.0,  # Penalize repetitive phrases
     )
 
@@ -164,7 +162,6 @@ def analyze_code_style(code):
 
     # Post-process result to extract a meaningful answer
     result = result.replace(prompt, "").strip()
-    print(result)
     # Split the result into author and explanation
     if ":" in result:
         author, explanation = result.split(":", 1)
