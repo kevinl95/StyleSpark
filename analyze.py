@@ -36,6 +36,13 @@ def truncate_code(code, max_tokens):
 
     return code
 
+def truncate_text(text, max_tokens):
+    """
+    Truncate a text to fit within the maximum number of tokens.
+    """
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+    tokens = tokenizer.encode(text, add_special_tokens=False)
+    return tokenizer.decode(tokens[:max_tokens])
 
 def generate_badge_url(author_name):
     base_url = "https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC"
@@ -90,7 +97,7 @@ def analyze_code_style(code):
 
     # Set the pad token to eos token
     tokenizer.pad_token = tokenizer.eos_token
-
+    max_prompt_tokens = 1024
     # Create the prompt with style descriptions and code
     prompt = f"""
         Given the following list of programming styles, determine which one best matches the provided code snippet. Respond in the format:
@@ -109,25 +116,24 @@ def analyze_code_style(code):
         4. Guido van Rossum – Python Creator
         Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
         5. Donald Knuth – TeX Creator
-        Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.
-        6. Vint Cerf – Father of the Internet
-        Focus on modular, well-structured, and reusable components. Robust documentation and error handling with adherence to standards.
-        7. Ken Thompson – UNIX Creator
-        Simple, efficient code designed for quick execution. Modular design and focus on system-level efficiency.
-        8. Brian Kernighan – C Co-author
-            Clear, simple, and minimalistic code. Focus on small programs with precision and clarity.
-        9. Tim Berners-Lee – Web Creator
+        Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.        7. Tim Berners-Lee – Web Creator
             Clean, simple, and modular code designed for interoperability and following standards for web technologies.
-        10. Margaret Hamilton – Software Engineering Pioneer
+        6. Margaret Hamilton – Software Engineering Pioneer
             Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
 
         Here is the code snippet:\n\n
         {code}\n\n
         Please provide the answer in the specified format:
     """
+    # Truncate code snippet if necessary
+    max_code_tokens = max_prompt_tokens - len(GPT2Tokenizer.from_pretrained("gpt2").encode(prompt))
+    truncated_code = truncate_text(code, max_code_tokens)
+
+    # Replace code snippet in prompt
+    final_prompt = prompt.replace(code, truncated_code)
     # Encode the prompt to count tokens
     inputs = tokenizer.encode_plus(
-        prompt,
+        final_prompt,
         return_tensors="pt",
         max_length=1024 - 75,
         truncation=True,  # Ensure the input is within the model's limits
