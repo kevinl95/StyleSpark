@@ -68,11 +68,11 @@ style_descriptions = """
 def analyze_code_style(code, style_descriptions):
     """
     Analyze the style of given code and match it to predefined styles.
-    
+
     Parameters:
         code (str): The user's code snippet to analyze.
         style_descriptions (str): Descriptions of programming styles to match against.
-    
+
     Returns:
         str: The style that most closely matches the code.
     """
@@ -80,46 +80,50 @@ def analyze_code_style(code, style_descriptions):
     model_name = "distilgpt2"
     tokenizer = GPT2Tokenizer.from_pretrained(model_name)
     model = GPT2LMHeadModel.from_pretrained(model_name)
-    
+
     # Create the prompt with style descriptions and code
     prompt = (
         f"{style_descriptions}\n\n"
         f"Code:\n{code}\n\n"
         f"Question: Which style does this code most closely match?"
     )
-    
+
     # Encode the prompt to count tokens
     inputs = tokenizer.encode(
         prompt,
         return_tensors="pt",
         max_length=1024,
-        truncation=True  # Ensure the input is within the model's limits
+        truncation=True,  # Ensure the input is within the model's limits
     )
-    
+
     # Check the number of tokens to ensure we're within the limit
     num_tokens = inputs.shape[-1]
-    
+
     # If the prompt exceeds the token limit, truncate it accordingly
     if num_tokens > 1024:
-        print(f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating...")
+        print(
+            f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
+        )
         prompt = tokenizer.decode(inputs[0][:1024], skip_special_tokens=True)
-        inputs = tokenizer.encode(prompt, return_tensors="pt", max_length=1024, truncation=True)
-    
+        inputs = tokenizer.encode(
+            prompt, return_tensors="pt", max_length=1024, truncation=True
+        )
+
     # Generate the response
     outputs = model.generate(
         inputs,
         max_length=128,  # Limit output length for concise results
         num_return_sequences=1,
         temperature=0.7,
-        top_k=50
+        top_k=50,
     )
-    
+
     # Decode and process the response
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    
+
     # Post-process result to extract a meaningful answer
     result = result.replace(prompt, "").strip()
-    
+
     return result
 
 
@@ -127,17 +131,17 @@ def read_code_files(repo_path, file_extensions, max_tokens=1024):
     """Read all code files and return the code content, stopping when enough code is collected."""
     code = ""
     tokenizer = GPT2Tokenizer.from_pretrained("distilgpt2")
-    
+
     for root, dirs, files in os.walk(repo_path):
         for file in files:
             if any(file.endswith(ext) for ext in file_extensions):
                 with open(os.path.join(root, file), "r") as f:
                     code += f.read() + "\n"
-                    
+
                     # Tokenize the current code and check the token count
                     encoded_code = tokenizer.encode(code, return_tensors="pt")
                     num_tokens = encoded_code.shape[-1]
-                    
+
                     # If the code exceeds the max_tokens, stop reading files
                     if num_tokens > max_tokens:
                         return code
@@ -148,23 +152,23 @@ def truncate_code(code, max_tokens):
     """Truncate code to fit within the max token length."""
     tokenizer = GPT2Tokenizer.from_pretrained("distilgpt2")
     encoded_code = tokenizer.encode(code, return_tensors="pt")
-    
+
     if encoded_code.shape[-1] > max_tokens:
         print(f"Truncating code to fit within {max_tokens} tokens.")
         return tokenizer.decode(encoded_code[0][:max_tokens], skip_special_tokens=True)
-    
+
     return code
 
 
 if __name__ == "__main__":
     # Get the path to the checked-out repository
-    repo_path = os.getenv('GITHUB_WORKSPACE')
+    repo_path = os.getenv("GITHUB_WORKSPACE")
     # Get the user's selected file extension types
-    file_extensions = os.getenv('FILE_EXTENSIONS').split(',')
-    
+    file_extensions = os.getenv("FILE_EXTENSIONS").split(",")
+
     # Read all code files in the project directory
     code = read_code_files(repo_path, file_extensions)
-    
+
     # Truncate the code if it exceeds the maximum token length
     code = truncate_code(code, max_tokens=1024)
 
