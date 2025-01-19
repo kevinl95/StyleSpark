@@ -1,6 +1,5 @@
-# Hello, World! Docker Action
+# StyleSpark: Analyzing and Matching Code to Iconic Programming Styles using GitHub Actions
 
-[![GitHub Super-Linter](https://github.com/actions/hello-world-docker-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
 ![CI](https://github.com/actions/hello-world-docker-action/actions/workflows/ci.yml/badge.svg)
 
 This action prints `Hello, World!` or `Hello, <who-to-greet>!` to the log. To
