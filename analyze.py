@@ -4,13 +4,12 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 code_len = 516  # 1024 - 433 - 75 tokens for the style descriptions and response
 
-def analyze_code_style(code, style_descriptions):
+def analyze_code_style(code):
     """
     Analyze the style of given code and match it to predefined styles.
 
     Parameters:
         code (str): The user's code snippet to analyze.
-        style_descriptions (str): Descriptions of programming styles to match against.
 
     Returns:
         tuple: The style author and the explanation that most closely matches the code.
@@ -192,7 +191,7 @@ if __name__ == "__main__":
     code = truncate_code(code, max_tokens=code_len)
 
     # Analyze the code style
-    author_name, style_analysis = analyze_code_style(code, style_descriptions)
+    author_name, style_analysis = analyze_code_style(code)
     # Commit changes, if requested
     if update_readme:
         badge_url = generate_badge_url(author_name)
