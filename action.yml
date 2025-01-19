@@ -23,6 +23,8 @@ runs:
     FILE_EXTENSIONS: ${{ inputs.file-extensions }}
     COMMIT_CHANGES: ${{ inputs.commit-changes }}
     README_PATH: ${{ inputs.readme-path }}
-  steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
+  jobs:
+    build:
+      steps:
+        - name: Check out repository
+          uses: actions/checkout@v2
