@@ -99,11 +99,11 @@ def analyze_code_style(code):
     tokenizer.pad_token = tokenizer.eos_token
     max_prompt_tokens = 1024
     # Create the prompt with style descriptions and code
-    prompt = """
-    Given the following code snippet, pick the programmer who you believe best matches the style of the code. Respond in the format:
+    prompt = f"""
+    Based on the following code snippet, identify which famous programmer's coding style it most closely resembles. Provide the name of the programmer and a brief explanation of why their style matches the code.
 
     Author: <Author's Name>
-    Explanation: <Detailed explanation of why this author matches the style of the code provided>
+    Explanation: <Explanation of why the author's style matches the code>
 
     Here is the code snippet:
     {code}
