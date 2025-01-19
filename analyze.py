@@ -57,7 +57,7 @@ def analyze_code_style(code, style_descriptions):
     )
 
     # Encode the prompt to count tokens
-    inputs = tokenizer.encode(
+    inputs = tokenizer.encode_plus(
         prompt,
         return_tensors="pt",
         max_length=code_len,
@@ -73,16 +73,16 @@ def analyze_code_style(code, style_descriptions):
             f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
         )
         prompt = tokenizer.decode(inputs[0][:code_len], skip_special_tokens=True)
-        inputs = tokenizer.encode(
+        inputs = tokenizer.encode_plus(
             prompt, return_tensors="pt", max_length=code_len, truncation=True
         )
 
     # Generate the response
     outputs = model.generate(
         inputs,
-        max_length=128,  # Limit output length for concise results
+        attention_mask=inputs["attention_mask"],
+        max_length=1024,
         num_return_sequences=1,
-        temperature=0.7,
         top_k=50,
     )
 
