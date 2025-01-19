@@ -105,7 +105,7 @@ def read_code_files(repo_path, file_extensions, max_tokens=code_len):
     code = ""
     tokenizer = GPT2Tokenizer.from_pretrained("distilgpt2")
 
-    for root, dirs, files in os.walk(repo_path):
+    for root, _, files in os.walk(repo_path):
         for file in files:
             if any(file.endswith(ext) for ext in file_extensions):
                 with open(os.path.join(root, file), "r") as f:
@@ -169,8 +169,7 @@ def update_readme_with_badge(readme_path, badge_url):
 
 
 if __name__ == "__main__":
-    # Get the path to the checked-out repository
-    repo_path = os.getenv("GITHUB_WORKSPACE")
+    repo_path = "/repo"
     # Get the user's selected file extension types
     file_extensions = os.getenv("FILE_EXTENSIONS").split(",")
     # Determine if the user wants their README updated
