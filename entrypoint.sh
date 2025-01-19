@@ -1,11 +1,6 @@
 #!/bin/sh -l
 
-# Activate Poetry's virtual environment
-source /venv/bin/activate  # Ensure you activate the venv you created during the Docker build
-
-# Ensure the directory for GitHub Actions output exists
-mkdir -p $(dirname "$GITHUB_OUTPUT")
-echo "$(python3 analyze.py)" >>"$GITHUB_OUTPUT"
+poetry run python3 analyze.py
 
 # Check if the user wants to commit changes
 if [ "$COMMIT_CHANGES" = "true" ]; then
@@ -15,14 +10,14 @@ if [ "$COMMIT_CHANGES" = "true" ]; then
     # Add an exception for the directory ownership issue
     git config --global --add safe.directory /repo
 
+    # Set up GitHub token for authentication
+    git config --global url."https://x-access-token:${GITHUB_TOKEN}@github.com".insteadOf "https://github.com"
+
     # Ensure the latest changes are fetched
     git -C /repo pull --rebase
     
     # Commit and push the changes
     git -C /repo add "$README_PATH"
-    git -C /repo commit -m "Update StyleSpark Badge [skip ci]"
+    git -C /repo commit -m "Update Code Style Badge [skip ci]"
     git -C /repo push
 fi
-
-# Deactivate the virtual environment
-deactivate
