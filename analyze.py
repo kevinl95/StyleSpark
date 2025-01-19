@@ -131,18 +131,20 @@ def truncate_code(code, max_tokens):
 
     return code
 
+
 def generate_badge_url(author_name):
     base_url = "https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC"
     formatted_author_name = author_name.replace(" ", "%20")  # Encode spaces for URL
     return base_url.replace("Author", formatted_author_name)
 
+
 def update_readme_with_badge(readme_path, badge_url):
     badge_markdown = f"![StyleSpark]({badge_url})"
-    
+
     try:
         with open(readme_path, "r") as file:
             content = file.read()
-        
+
         # Check if a badge already exists
         if "![StyleSpark]" in content:
             # Replace the existing badge
@@ -164,6 +166,7 @@ def update_readme_with_badge(readme_path, badge_url):
         print(f"Updated {readme_path} with badge.")
     except FileNotFoundError:
         print(f"{readme_path} not found.")
+
 
 if __name__ == "__main__":
     # Get the path to the checked-out repository
