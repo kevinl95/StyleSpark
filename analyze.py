@@ -2,35 +2,7 @@ import os
 import re
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-code_len = 513  # 1024 - 461 - 50 tokens for the style descriptions and response
-
-style_descriptions = """
-1. Grace Hopper – Compiler Pioneer
-   Focus on readability, with extensive comments and descriptive names. Code is modular, structured for ease of maintenance.
-   Known for COBOL, a language emphasizing readability and documentation.
-2. Ada Lovelace – First Programmer
-   Focus on logical precision, algorithmic clarity, and mathematical elegance. Her algorithms were abstract, rigorous, and concise.
-3. Linus Torvalds – Creator of Linux
-   Minimalist, performance-focused code with short, simple functions. Few comments, prioritizing efficiency and pragmatism.
-4. Guido van Rossum – Python Creator
-   Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
-5. Donald Knuth – TeX Creator
-   Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.
-6. Vint Cerf – Father of the Internet
-   Focus on modular, well-structured, and reusable components. Robust documentation and error handling with adherence to standards.
-7. James Gosling – Java Creator
-   Object-oriented design with a focus on portability. Verbose syntax and clear separation of concerns.
-8. Bjarne Stroustrup – C++ Creator
-   Code prioritizes efficiency and flexibility, with extensive use of object-oriented and generic programming features.
-9. Ken Thompson – UNIX Creator
-   Simple, efficient code designed for quick execution. Modular design and focus on system-level efficiency.
-10. Brian Kernighan – C Co-author
-    Clear, simple, and minimalistic code. Focus on small programs with precision and clarity.
-11. Tim Berners-Lee – Web Creator
-    Clean, simple, and modular code designed for interoperability and following standards for web technologies.
-12. Margaret Hamilton – Software Engineering Pioneer
-    Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
-"""
+code_len = 516  # 1024 - 433 - 75 tokens for the style descriptions and response
 
 def analyze_code_style(code, style_descriptions):
     """
@@ -52,17 +24,45 @@ def analyze_code_style(code, style_descriptions):
     tokenizer.pad_token = tokenizer.eos_token
 
     # Create the prompt with style descriptions and code
-    prompt = (
-        f"{style_descriptions}\n\n"
-        f"Code:\n{code}\n\n"
-        f"Question: Which style does this code most closely match? Provide the author followed by a colon (:) and explanation."
-    )
+    prompt = f"""
+        Given the following list of programming styles, determine which one best matches the provided code snippet. Respond in the format:
+
+        Author: <Author's Name>
+        Explanation: <Detailed explanation of why this style matches>
+
+        List of Styles:
+        1. Grace Hopper – Compiler Pioneer
+        Focus on readability, with extensive comments and descriptive names. Code is modular, structured for ease of maintenance.
+        Known for COBOL, a language emphasizing readability and documentation.
+        2. Ada Lovelace – First Programmer
+        Focus on logical precision, algorithmic clarity, and mathematical elegance. Her algorithms were abstract, rigorous, and concise.
+        3. Linus Torvalds – Creator of Linux
+        Minimalist, performance-focused code with short, simple functions. Few comments, prioritizing efficiency and pragmatism.
+        4. Guido van Rossum – Python Creator
+        Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
+        5. Donald Knuth – TeX Creator
+        Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.
+        6. Vint Cerf – Father of the Internet
+        Focus on modular, well-structured, and reusable components. Robust documentation and error handling with adherence to standards.
+        7. Ken Thompson – UNIX Creator
+        Simple, efficient code designed for quick execution. Modular design and focus on system-level efficiency.
+        8. Brian Kernighan – C Co-author
+            Clear, simple, and minimalistic code. Focus on small programs with precision and clarity.
+        9. Tim Berners-Lee – Web Creator
+            Clean, simple, and modular code designed for interoperability and following standards for web technologies.
+        10. Margaret Hamilton – Software Engineering Pioneer
+            Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
+
+        Here is the code snippet:\n\n
+        {code}\n\n
+        Please provide the answer in the specified format:
+    """
     print(prompt)
     # Encode the prompt to count tokens
     inputs = tokenizer.encode_plus(
         prompt,
         return_tensors="pt",
-        max_length=1024-50,
+        max_length=1024-75,
         truncation=True,  # Ensure the input is within the model's limits
         padding="max_length"  # Pad to the maximum length
     )
@@ -85,8 +85,10 @@ def analyze_code_style(code, style_descriptions):
     outputs = model.generate(
         inputs["input_ids"],
         attention_mask=inputs["attention_mask"],
-        max_new_tokens=50,  # Generate up to 50 new tokens
+        max_new_tokens=75,  # Generate up to 75 new tokens
         num_return_sequences=1,
+        top_p=0.9,           # Balanced sampling of likely tokens
+        repetition_penalty=2.0,  # Penalize repetitive phrases
     )
 
     # Decode and process the response
