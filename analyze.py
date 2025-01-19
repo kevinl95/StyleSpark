@@ -65,16 +65,16 @@ def analyze_code_style(code, style_descriptions):
     )
 
     # Check the number of tokens to ensure we're within the limit
-    num_tokens = inputs.shape[-1]
+    num_tokens = inputs["input_ids"].shape[-1]
 
     # If the prompt exceeds the token limit, truncate it accordingly
     if num_tokens > code_len:
         print(
             f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
         )
-        prompt = tokenizer.decode(inputs[0][:code_len], skip_special_tokens=True)
+        prompt = tokenizer.decode(inputs["input_ids"][0][:code_len], skip_special_tokens=True)
         inputs = tokenizer.encode_plus(
-            prompt, return_tensors="pt", max_length=code_len, truncation=True
+            prompt, return_tensors="pt", max_length=code_len, truncation=True, padding="max_length"
         )
 
     # Generate the response
