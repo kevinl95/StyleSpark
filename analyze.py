@@ -32,7 +32,6 @@ style_descriptions = """
     Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
 """
 
-
 def analyze_code_style(code, style_descriptions):
     """
     Analyze the style of given code and match it to predefined styles.
@@ -44,8 +43,8 @@ def analyze_code_style(code, style_descriptions):
     Returns:
         tuple: The style author and the explanation that most closely matches the code.
     """
-    # Load DistilGPT2 model and tokenizer
-    model_name = "distilgpt2"
+    # Load GPT-2 model and tokenizer
+    model_name = "gpt2"
     tokenizer = GPT2Tokenizer.from_pretrained(model_name)
     model = GPT2LMHeadModel.from_pretrained(model_name)
 
@@ -60,7 +59,7 @@ def analyze_code_style(code, style_descriptions):
     inputs = tokenizer.encode_plus(
         prompt,
         return_tensors="pt",
-        max_length=code_len,
+        max_length=1024,
         truncation=True,  # Ensure the input is within the model's limits
     )
 
@@ -93,9 +92,13 @@ def analyze_code_style(code, style_descriptions):
     result = result.replace(prompt, "").strip()
 
     # Split the result into author and explanation
-    author, explanation = result.split(":", 1)
-    author = author.strip()
-    explanation = explanation.strip()
+    if ":" in result:
+        author, explanation = result.split(":", 1)
+        author = author.strip()
+        explanation = explanation.strip()
+    else:
+        author = "Unknown"
+        explanation = "The model did not provide a clear author and explanation."
 
     return author, explanation
 
@@ -103,7 +106,7 @@ def analyze_code_style(code, style_descriptions):
 def read_code_files(repo_path, file_extensions, max_tokens=code_len):
     """Read all code files and return the code content, stopping when enough code is collected."""
     code = ""
-    tokenizer = GPT2Tokenizer.from_pretrained("distilgpt2")
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
     for root, _, files in os.walk(repo_path):
         for file in files:
@@ -122,7 +125,7 @@ def read_code_files(repo_path, file_extensions, max_tokens=code_len):
 
 def truncate_code(code, max_tokens):
     """Truncate code to fit within the max token length."""
-    tokenizer = GPT2Tokenizer.from_pretrained("distilgpt2")
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
     encoded_code = tokenizer.encode(code, return_tensors="pt")
 
     if encoded_code.shape[-1] > max_tokens:
