@@ -1,8 +1,8 @@
-![StyleSpark](https://img.shields.io/badge/Unknown-Unknown?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
-
 # StyleSpark: Analyzing and Matching Code to Iconic Programming Styles using GitHub Actions
 
 ![CI](https://github.com/actions/hello-world-docker-action/actions/workflows/ci.yml/badge.svg)
+
+![StyleSpark](https://img.shields.io/badge/Unknown-Unknown?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
 
 This action prints `Hello, World!` or `Hello, <who-to-greet>!` to the log. To
 learn how this action was built, see
