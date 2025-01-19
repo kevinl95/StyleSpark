@@ -3,19 +3,23 @@
 # Activate the virtual environment
 source /venv/bin/activate
 
-echo "$(python3 analyze.py)" >>"$GITHUB_OUTPUT"
+# Run the analysis script and capture the output
+result=$(python3 analyze.py)
+echo "result=$result" >> "$GITHUB_OUTPUT"
 
 # Check if the user wants to commit changes
 if [ "$COMMIT_CHANGES" = "true" ]; then
+    # Configure Git
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    
-    # Ensure you fetch the latest changes to avoid conflicts
+
+    # Navigate to repository and ensure it's initialized
+    cd /repo || exit
     git pull --rebase
-    
+
     # Commit and push the changes
-    git add README.md
-    git commit -m "Update Code Style Badge [skip ci]"
+    git add "${README_PATH}"
+    git commit -m "Update StyleSpark Badge [skip ci]"
     git push
 fi
 

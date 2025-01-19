@@ -20,12 +20,13 @@ runs:
   using: composite
   steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Run Docker container
       shell: bash
       run: |
         docker build -t stylespark .
-        docker run -e FILE_EXTENSIONS="${{ inputs.file-extensions }}" \
+        docker run -v "${{ github.workspace }}:/repo" \
+                  -e FILE_EXTENSIONS="${{ inputs.file-extensions }}" \
                   -e COMMIT_CHANGES="${{ inputs.commit-changes }}" \
                   -e README_PATH="${{ inputs.readme-path }}" \
                   stylespark
