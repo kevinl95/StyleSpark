@@ -99,31 +99,14 @@ def analyze_code_style(code):
     tokenizer.pad_token = tokenizer.eos_token
     max_prompt_tokens = 1024
     # Create the prompt with style descriptions and code
-    prompt = f"""
-        Given the following list of programming styles, determine which one best matches the provided code snippet. Respond in the format:
+    prompt = """
+    Given the following code snippet, pick the programmer who you believe best matches the style of the code. Respond in the format:
 
-        Author: <Author's Name>
-        Explanation: <Detailed explanation of why this style matches>
+    Author: <Author's Name>
+    Explanation: <Detailed explanation of why this author matches the style of the code provided>
 
-        List of Styles:
-        1. Grace Hopper – Compiler Pioneer
-        Focus on readability, with extensive comments and descriptive names. Code is modular, structured for ease of maintenance.
-        Known for COBOL, a language emphasizing readability and documentation.
-        2. Ada Lovelace – First Programmer
-        Focus on logical precision, algorithmic clarity, and mathematical elegance. Her algorithms were abstract, rigorous, and concise.
-        3. Linus Torvalds – Creator of Linux
-        Minimalist, performance-focused code with short, simple functions. Few comments, prioritizing efficiency and pragmatism.
-        4. Guido van Rossum – Python Creator
-        Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
-        5. Donald Knuth – TeX Creator
-        Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.        7. Tim Berners-Lee – Web Creator
-            Clean, simple, and modular code designed for interoperability and following standards for web technologies.
-        6. Margaret Hamilton – Software Engineering Pioneer
-            Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
-
-        Here is the code snippet:\n\n
-        {code}\n\n
-        Please provide the answer in the specified format:
+    Here is the code snippet:
+    {code}
     """
     # Truncate code snippet if necessary
     max_code_tokens = max_prompt_tokens - len(GPT2Tokenizer.from_pretrained("gpt2").encode(prompt))
