@@ -169,13 +169,13 @@ def update_readme_with_badge(readme_path, badge_url):
 
 
 if __name__ == "__main__":
-    repo_path = "/repo"
+    repo_path = "repo"
     # Get the user's selected file extension types
     file_extensions = os.getenv("FILE_EXTENSIONS").split(",")
     # Determine if the user wants their README updated
     update_readme = os.getenv("COMMIT_CHANGES", "false").lower() in ("true", "1", "yes")
     # Get the README path
-    readme_path = os.getenv("README_PATH")
+    readme_path = os.path.join(repo_path, os.getenv("README_PATH"))
     # Read all code files in the project directory
     code = read_code_files(repo_path, file_extensions)
 
