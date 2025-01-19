@@ -2,10 +2,12 @@
 
 ![CI](https://github.com/actions/hello-world-docker-action/actions/workflows/ci.yml/badge.svg)
 
+![StyleSpark](https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
+
 This action prints `Hello, World!` or `Hello, <who-to-greet>!` to the log. To
 learn how this action was built, see
 [Creating a Docker container action](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action).
-
+Hello, World! Docker Action
 ## Create Your Own Action
 
 To create your own action, you can use this repository as a template! Just

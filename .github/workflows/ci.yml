@@ -51,3 +51,20 @@ jobs:
         run: |
           docker run \
             --rm ${{ env.TEST_TAG }}
+
+  test-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Test StyleSpark Action
+        id: test-action
+        uses: ./
+        with:
+          file-extensions: '.py'
+          readme-path: 'README.md'
+          commit-changes: 'true'
