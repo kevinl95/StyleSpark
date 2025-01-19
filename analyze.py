@@ -2,7 +2,7 @@ import os
 import re
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-code_len = 150
+code_len = 250
 
 
 def read_code_files(repo_path, file_extensions, max_tokens=code_len):
@@ -119,9 +119,8 @@ def analyze_code_style(code):
     inputs = tokenizer.encode_plus(
         final_prompt,
         return_tensors="pt",
-        max_length=1024 - 75,
+        max_length=1024 - 150,
         truncation=True,  # Ensure the input is within the model's limits
-        padding="max_length",  # Pad to the maximum length
     )
 
     # Check the number of tokens to ensure we're within the limit
@@ -142,7 +141,7 @@ def analyze_code_style(code):
     outputs = model.generate(
         inputs["input_ids"],
         attention_mask=inputs["attention_mask"],
-        max_new_tokens=75,  # Generate up to 75 new tokens
+        max_new_tokens=150,  # Generate up to 75 new tokens
         num_return_sequences=1,
         repetition_penalty=2.0,  # Penalize repetitive phrases
     )
