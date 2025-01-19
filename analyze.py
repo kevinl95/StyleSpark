@@ -71,7 +71,7 @@ def analyze_code_style(code, style_descriptions):
     num_tokens = inputs["input_ids"].shape[-1]
 
     # If the prompt exceeds the token limit, truncate it accordingly
-    if num_tokens > code_len:
+    if num_tokens > 1024:
         print(
             f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
         )
@@ -94,6 +94,7 @@ def analyze_code_style(code, style_descriptions):
 
     # Post-process result to extract a meaningful answer
     result = result.replace(prompt, "").strip()
+    print(result)
 
     # Split the result into author and explanation
     if ":" in result:
