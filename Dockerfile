@@ -10,7 +10,7 @@ RUN apk add --no-cache gcc libffi-dev musl-dev git g++ linux-headers
 RUN pip install "poetry==2.0.1"
 
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --without dev --extras "cuda"
+RUN poetry install --without dev
 
 COPY entrypoint.sh analyze.py ./
 CMD ["./entrypoint.sh"]
