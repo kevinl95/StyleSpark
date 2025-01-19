@@ -2,7 +2,7 @@ import os
 import re
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-code_len = 516  # 1024 - 433 - 75 tokens for the style descriptions and response
+code_len = 150
 
 
 def read_code_files(repo_path, file_extensions, max_tokens=code_len):
@@ -108,6 +108,7 @@ def analyze_code_style(code):
     Here is the code snippet:
     {code}
     """
+    print(prompt)
     # Truncate code snippet if necessary
     max_code_tokens = max_prompt_tokens - len(GPT2Tokenizer.from_pretrained("gpt2").encode(prompt))
     truncated_code = truncate_text(code, max_code_tokens)
@@ -148,7 +149,7 @@ def analyze_code_style(code):
 
     # Decode and process the response
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
+    print(result)
     # Post-process result to extract a meaningful answer
     result = result.replace(prompt, "").strip()
     # Split the result into author and explanation
