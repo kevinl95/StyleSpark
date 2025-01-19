@@ -2,7 +2,7 @@ import os
 import re
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-code_len = 564  # 1024 - 460 tokens for the style descriptions
+code_len = 563  # 1024 - 461 tokens for the style descriptions
 
 style_descriptions = """
 1. Grace Hopper – Compiler Pioneer
@@ -84,7 +84,7 @@ def analyze_code_style(code, style_descriptions):
     outputs = model.generate(
         inputs["input_ids"],
         attention_mask=inputs["attention_mask"],
-        max_length=1024,
+        max_new_tokens=200,
         num_return_sequences=1,
         top_k=50,
     )
