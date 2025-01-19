@@ -62,7 +62,7 @@ def analyze_code_style(code, style_descriptions):
     inputs = tokenizer.encode_plus(
         prompt,
         return_tensors="pt",
-        max_length=1024,
+        max_length=1024-50,
         truncation=True,  # Ensure the input is within the model's limits
         padding="max_length"  # Pad to the maximum length
     )
@@ -71,11 +71,11 @@ def analyze_code_style(code, style_descriptions):
     num_tokens = inputs["input_ids"].shape[-1]
     print(num_tokens)
     # If the prompt exceeds the token limit, truncate it accordingly
-    if num_tokens > 1024:
+    if num_tokens > 1024 - 50:
         print(
             f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
         )
-        truncated_tokens = inputs["input_ids"][0][:1024]
+        truncated_tokens = inputs["input_ids"][0][:1024-50]
         prompt = tokenizer.decode(truncated_tokens, skip_special_tokens=True)
         inputs = tokenizer.encode_plus(
             prompt, return_tensors="pt", truncation=True, padding="max_length"
@@ -87,7 +87,6 @@ def analyze_code_style(code, style_descriptions):
         attention_mask=inputs["attention_mask"],
         max_new_tokens=50,  # Generate up to 50 new tokens
         num_return_sequences=1,
-        top_k=30,
     )
 
     # Decode and process the response
