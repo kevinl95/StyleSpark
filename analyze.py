@@ -57,7 +57,7 @@ def analyze_code_style(code, style_descriptions):
         f"Code:\n{code}\n\n"
         f"Question: Which style does this code most closely match? Provide the author followed by a colon (:) and explanation."
     )
-
+    print(prompt)
     # Encode the prompt to count tokens
     inputs = tokenizer.encode_plus(
         prompt,
@@ -69,15 +69,16 @@ def analyze_code_style(code, style_descriptions):
 
     # Check the number of tokens to ensure we're within the limit
     num_tokens = inputs["input_ids"].shape[-1]
-
+    print(num_tokens)
     # If the prompt exceeds the token limit, truncate it accordingly
     if num_tokens > 1024:
         print(
             f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
         )
-        prompt = tokenizer.decode(inputs["input_ids"][0][:code_len], skip_special_tokens=True)
+        truncated_tokens = inputs["input_ids"][0][:1024]
+        prompt = tokenizer.decode(truncated_tokens, skip_special_tokens=True)
         inputs = tokenizer.encode_plus(
-            prompt, return_tensors="pt", max_length=code_len, truncation=True, padding="max_length"
+            prompt, return_tensors="pt", truncation=True, padding="max_length"
         )
 
     # Generate the response
@@ -86,7 +87,7 @@ def analyze_code_style(code, style_descriptions):
         attention_mask=inputs["attention_mask"],
         max_new_tokens=50,  # Generate up to 50 new tokens
         num_return_sequences=1,
-        top_k=50,
+        top_k=30,
     )
 
     # Decode and process the response
