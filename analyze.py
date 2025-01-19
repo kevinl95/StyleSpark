@@ -62,7 +62,7 @@ def analyze_code_style(code, style_descriptions):
     inputs = tokenizer.encode_plus(
         prompt,
         return_tensors="pt",
-        max_length=1024,
+        max_length=1024-50,
         truncation=True,  # Ensure the input is within the model's limits
         padding="max_length"  # Pad to the maximum length
     )
