@@ -2,7 +2,7 @@ import os
 import re
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-code_len = 563  # 1024 - 461 tokens for the style descriptions
+code_len = 513  # 1024 - 461 - 50 tokens for the style descriptions and response
 
 style_descriptions = """
 1. Grace Hopper – Compiler Pioneer
@@ -62,7 +62,7 @@ def analyze_code_style(code, style_descriptions):
     inputs = tokenizer.encode_plus(
         prompt,
         return_tensors="pt",
-        max_length=1024-50,
+        max_length=1024,
         truncation=True,  # Ensure the input is within the model's limits
         padding="max_length"  # Pad to the maximum length
     )
@@ -71,11 +71,11 @@ def analyze_code_style(code, style_descriptions):
     num_tokens = inputs["input_ids"].shape[-1]
     print(num_tokens)
     # If the prompt exceeds the token limit, truncate it accordingly
-    if num_tokens > 1024 - 50:
+    if num_tokens > 1024:
         print(
             f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
         )
-        truncated_tokens = inputs["input_ids"][0][:1024-50]
+        truncated_tokens = inputs["input_ids"][0][:1024]
         prompt = tokenizer.decode(truncated_tokens, skip_special_tokens=True)
         inputs = tokenizer.encode_plus(
             prompt, return_tensors="pt", truncation=True, padding="max_length"
