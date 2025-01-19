@@ -6,11 +6,11 @@ ENV PYTHONFAULTHANDLER=1 \
 
 FROM base AS builder
 
-RUN apk add --no-cache gcc libffi-dev musl-dev git
+RUN apk add --no-cache gcc libffi-dev musl-dev git g++ linux-headers
 RUN pip install "poetry==2.0.1"
 
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --without dev
+RUN poetry install --without dev --extras "cuda"
 
 COPY entrypoint.sh analyze.py ./
 CMD ["./entrypoint.sh"]
