@@ -1,11 +1,27 @@
-# Set the base image to use for subsequent instructions
-FROM alpine:3.21
+FROM python:3.13.1-alpine3.21 as base
 
-# Set the working directory inside the container
-WORKDIR /usr/src
+ENV PYTHONFAULTHANDLER=1 \
+    PYTHONHASHSEED=random \
+    PYTHONUNBUFFERED=1
 
-# Copy any source file(s) required for the action
-COPY entrypoint.sh .
+WORKDIR /app
 
-# Configure the container to be run as an executable
-ENTRYPOINT ["/usr/src/entrypoint.sh"]
+FROM base as builder
+
+RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
+RUN pip install "poetry==2.0.1"
+RUN python -m venv /venv
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry self add poetry-plugin-export
+RUN poetry export -f requirements.txt | /venv/bin/pip install -r /dev/stdin
+
+COPY . .
+RUN poetry build && /venv/bin/pip install dist/*.whl
+
+FROM base as final
+
+RUN apk add --no-cache libffi libpq
+COPY --from=builder /venv /venv
+COPY entrypoint.sh analyze.py ./
+CMD ["./entrypoint.sh"]
