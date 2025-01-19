@@ -48,6 +48,9 @@ def analyze_code_style(code, style_descriptions):
     tokenizer = GPT2Tokenizer.from_pretrained(model_name)
     model = GPT2LMHeadModel.from_pretrained(model_name)
 
+    # Set the pad token to eos token
+    tokenizer.pad_token = tokenizer.eos_token
+
     # Create the prompt with style descriptions and code
     prompt = (
         f"{style_descriptions}\n\n"
@@ -61,6 +64,7 @@ def analyze_code_style(code, style_descriptions):
         return_tensors="pt",
         max_length=1024,
         truncation=True,  # Ensure the input is within the model's limits
+        padding="max_length"  # Pad to the maximum length
     )
 
     # Check the number of tokens to ensure we're within the limit
