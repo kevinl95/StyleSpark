@@ -1,3 +1,5 @@
+![StyleSpark](https://img.shields.io/badge/Given%20the%20following%20list%20of%20programming%20styles,%20determine%20which%20one%20best%20matches%20the%20provided%20code%20snippet.%20Respond%20in%20the%20format-Given%20the%20following%20list%20of%20programming%20styles,%20determine%20which%20one%20best%20matches%20the%20provided%20code%20snippet.%20Respond%20in%20the%20format?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
+
 # StyleSpark: Analyzing and Matching Code to Iconic Programming Styles using GitHub Actions
 
 ![CI](https://github.com/actions/hello-world-docker-action/actions/workflows/ci.yml/badge.svg)
