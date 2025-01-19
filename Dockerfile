@@ -4,8 +4,6 @@ ENV PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
     PYTHONUNBUFFERED=1
 
-WORKDIR /app
-
 FROM base AS builder
 
 RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
@@ -18,8 +16,7 @@ RUN poetry install
 
 FROM base AS final
 
-RUN apk add --no-cache libffi libpq
+RUN apk add --no-cache libffi libpq git
 COPY --from=builder /venv /venv
-COPY --from=builder /app /app
 COPY entrypoint.sh analyze.py ./
 CMD ["./entrypoint.sh"]
