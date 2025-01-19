@@ -10,7 +10,7 @@ RUN apk add --no-cache gcc libffi-dev musl-dev git
 RUN pip install "poetry==2.0.1"
 
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-dev
+RUN poetry install --without dev
 
 COPY entrypoint.sh analyze.py ./
 CMD ["./entrypoint.sh"]
