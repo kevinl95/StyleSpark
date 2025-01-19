@@ -79,7 +79,7 @@ def analyze_code_style(code, style_descriptions):
 
     # Generate the response
     outputs = model.generate(
-        inputs,
+        inputs["input_ids"],
         attention_mask=inputs["attention_mask"],
         max_length=1024,
         num_return_sequences=1,
