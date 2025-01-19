@@ -6,30 +6,16 @@ ENV PYTHONFAULTHANDLER=1 \
 
 FROM base AS builder
 
-# Install necessary build dependencies
-RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev git
-
-# Install Poetry
+RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
 RUN pip install "poetry==2.0.1"
-
-# Create and activate virtual environment
 RUN python -m venv /venv
 
-# Copy and install project dependencies
 COPY pyproject.toml poetry.lock ./
-RUN poetry self add poetry-plugin-export
-RUN poetry install --without dev
+RUN poetry install  # Install dependencies, including transformers
 
 FROM base AS final
 
-# Install runtime dependencies
 RUN apk add --no-cache libffi libpq git
-
-# Copy virtual environment and scripts
 COPY --from=builder /venv /venv
 COPY entrypoint.sh analyze.py ./
-
-# Set working directory
-WORKDIR /repo
-
 CMD ["./entrypoint.sh"]
