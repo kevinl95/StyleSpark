@@ -17,15 +17,11 @@ inputs:
     default: 'false'
 
 runs:
-  using: docker
-  image: Dockerfile
-  env:
-    FILE_EXTENSIONS: ${{ inputs.file-extensions }}
-    COMMIT_CHANGES: ${{ inputs.commit-changes }}
-    README_PATH: ${{ inputs.readme-path }}
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Check out repository
-          uses: actions/checkout@v2
+  using: composite
+  steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - name: Run Docker container
+      run: |
+        docker build -t stylespark .
+        docker run -e FILE_EXTENSIONS="${{ inputs.file-extensions }}" -e COMMIT_CHANGES="${{ inputs.commit-changes }}" -e README_PATH="${{ inputs.readme-path }}" stylespark
