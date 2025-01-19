@@ -84,7 +84,7 @@ def analyze_code_style(code, style_descriptions):
     outputs = model.generate(
         inputs["input_ids"],
         attention_mask=inputs["attention_mask"],
-        max_new_tokens=200,
+        max_new_tokens=50,  # Generate up to 50 new tokens
         num_return_sequences=1,
         top_k=50,
     )
@@ -95,7 +95,6 @@ def analyze_code_style(code, style_descriptions):
     # Post-process result to extract a meaningful answer
     result = result.replace(prompt, "").strip()
     print(result)
-
     # Split the result into author and explanation
     if ":" in result:
         author, explanation = result.split(":", 1)
