@@ -1,67 +1,34 @@
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import os
 
+code_len = 564  # 1024 - 460 tokens for the style descriptions
+
 style_descriptions = """
 1. Grace Hopper – Compiler Pioneer
    Focus on readability, with extensive comments and descriptive names. Code is modular, structured for ease of maintenance.
    Known for COBOL, a language emphasizing readability and documentation.
-
 2. Ada Lovelace – First Programmer
    Focus on logical precision, algorithmic clarity, and mathematical elegance. Her algorithms were abstract, rigorous, and concise.
-
 3. Linus Torvalds – Creator of Linux
    Minimalist, performance-focused code with short, simple functions. Few comments, prioritizing efficiency and pragmatism.
-
 4. Guido van Rossum – Python Creator
    Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
-
 5. Donald Knuth – TeX Creator
    Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.
-
 6. Vint Cerf – Father of the Internet
    Focus on modular, well-structured, and reusable components. Robust documentation and error handling with adherence to standards.
-
 7. James Gosling – Java Creator
    Object-oriented design with a focus on portability. Verbose syntax and clear separation of concerns.
-
 8. Bjarne Stroustrup – C++ Creator
    Code prioritizes efficiency and flexibility, with extensive use of object-oriented and generic programming features.
-
 9. Ken Thompson – UNIX Creator
    Simple, efficient code designed for quick execution. Modular design and focus on system-level efficiency.
-
 10. Brian Kernighan – C Co-author
     Clear, simple, and minimalistic code. Focus on small programs with precision and clarity.
-
-11. John Carmack – Game Developer
-    Optimized, efficient code with cutting-edge algorithms. Balance of low-level performance and high-level design.
-
-12. Tim Berners-Lee – Web Creator
+11. Tim Berners-Lee – Web Creator
     Clean, simple, and modular code designed for interoperability and following standards for web technologies.
-
-13. Margaret Hamilton – Software Engineering Pioneer
+12. Margaret Hamilton – Software Engineering Pioneer
     Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
-
-14. Jeff Dean – Google Engineer
-    Scale-oriented code with optimized algorithms for massive performance at scale. Strong use of concurrency.
-
-15. Edsger Dijkstra – Algorithm Pioneer
-    Elegant, structured code focused on correctness and mathematical rigor, often using formal verification methods.
-
-16. Scott Fahlman – AI Researcher
-    Logical, structured code with clear, concise function definitions and comments. Focus on clarity and understanding.
-
-17. Sheryl Sandberg – Tech Executive
-    Empathy-driven design with an emphasis on user experience and collaborative development. Simple, clear code.
-
-18. Marissa Mayer – Former Google Executive
-    User-centered design with a focus on efficiency, speed, and productivity in both code execution and interface.
-
-19. Richard Stallman – Free Software Advocate
-    Focus on simplicity, functionality, and open-source licenses. Code should be free and open for modification and redistribution.
-
-20. Vint Cerf – Internet Protocol Architect
-    Code focused on networking protocols with modular design, efficient handling of distributed systems, and robust documentation.
 """
 
 
@@ -92,7 +59,7 @@ def analyze_code_style(code, style_descriptions):
     inputs = tokenizer.encode(
         prompt,
         return_tensors="pt",
-        max_length=1024,
+        max_length=code_len,
         truncation=True,  # Ensure the input is within the model's limits
     )
 
@@ -100,13 +67,13 @@ def analyze_code_style(code, style_descriptions):
     num_tokens = inputs.shape[-1]
 
     # If the prompt exceeds the token limit, truncate it accordingly
-    if num_tokens > 1024:
+    if num_tokens > code_len:
         print(
             f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
         )
-        prompt = tokenizer.decode(inputs[0][:1024], skip_special_tokens=True)
+        prompt = tokenizer.decode(inputs[0][:code_len], skip_special_tokens=True)
         inputs = tokenizer.encode(
-            prompt, return_tensors="pt", max_length=1024, truncation=True
+            prompt, return_tensors="pt", max_length=code_len, truncation=True
         )
 
     # Generate the response
@@ -127,7 +94,7 @@ def analyze_code_style(code, style_descriptions):
     return result
 
 
-def read_code_files(repo_path, file_extensions, max_tokens=1024):
+def read_code_files(repo_path, file_extensions, max_tokens=code_len):
     """Read all code files and return the code content, stopping when enough code is collected."""
     code = ""
     tokenizer = GPT2Tokenizer.from_pretrained("distilgpt2")
@@ -170,7 +137,7 @@ if __name__ == "__main__":
     code = read_code_files(repo_path, file_extensions)
 
     # Truncate the code if it exceeds the maximum token length
-    code = truncate_code(code, max_tokens=1024)
+    code = truncate_code(code, max_tokens=code_len)
 
     # Analyze the code style
     style_analysis = analyze_code_style(code, style_descriptions)
