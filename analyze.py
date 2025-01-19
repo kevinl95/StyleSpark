@@ -1,5 +1,6 @@
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import os
+import re
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 code_len = 564  # 1024 - 460 tokens for the style descriptions
 
@@ -41,7 +42,7 @@ def analyze_code_style(code, style_descriptions):
         style_descriptions (str): Descriptions of programming styles to match against.
 
     Returns:
-        str: The style that most closely matches the code.
+        tuple: The style author and the explanation that most closely matches the code.
     """
     # Load DistilGPT2 model and tokenizer
     model_name = "distilgpt2"
@@ -52,7 +53,7 @@ def analyze_code_style(code, style_descriptions):
     prompt = (
         f"{style_descriptions}\n\n"
         f"Code:\n{code}\n\n"
-        f"Question: Which style does this code most closely match?"
+        f"Question: Which style does this code most closely match? Provide the author followed by a colon (:) and explanation."
     )
 
     # Encode the prompt to count tokens
@@ -91,7 +92,12 @@ def analyze_code_style(code, style_descriptions):
     # Post-process result to extract a meaningful answer
     result = result.replace(prompt, "").strip()
 
-    return result
+    # Split the result into author and explanation
+    author, explanation = result.split(":", 1)
+    author = author.strip()
+    explanation = explanation.strip()
+
+    return author, explanation
 
 
 def read_code_files(repo_path, file_extensions, max_tokens=code_len):
@@ -104,7 +110,6 @@ def read_code_files(repo_path, file_extensions, max_tokens=code_len):
             if any(file.endswith(ext) for ext in file_extensions):
                 with open(os.path.join(root, file), "r") as f:
                     code += f.read() + "\n"
-
                     # Tokenize the current code and check the token count
                     encoded_code = tokenizer.encode(code, return_tensors="pt")
                     num_tokens = encoded_code.shape[-1]
@@ -126,13 +131,49 @@ def truncate_code(code, max_tokens):
 
     return code
 
+def generate_badge_url(author_name):
+    base_url = "https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC"
+    formatted_author_name = author_name.replace(" ", "%20")  # Encode spaces for URL
+    return base_url.replace("Author", formatted_author_name)
+
+def update_readme_with_badge(readme_path, badge_url):
+    badge_markdown = f"![StyleSpark]({badge_url})"
+    
+    try:
+        with open(readme_path, "r") as file:
+            content = file.read()
+        
+        # Check if a badge already exists
+        if "![StyleSpark]" in content:
+            # Replace the existing badge
+            content = re.sub(r"!\[StyleSpark\]\(.*?\)", badge_markdown, content)
+        else:
+            # Append the badge to the top of the README
+            content = badge_markdown + "\n\n" + content
+
+        # Write back the updated README
+        with open(readme_path, "w") as file:
+            file.write(content)
+
+        print(f"Updated {readme_path} with badge.")
+    except FileNotFoundError:
+        print(f"{readme_path} not found.")
+        with open(readme_path, "w") as file:
+            file.write(content)
+
+        print(f"Updated {readme_path} with badge.")
+    except FileNotFoundError:
+        print(f"{readme_path} not found.")
 
 if __name__ == "__main__":
     # Get the path to the checked-out repository
     repo_path = os.getenv("GITHUB_WORKSPACE")
     # Get the user's selected file extension types
     file_extensions = os.getenv("FILE_EXTENSIONS").split(",")
-
+    # Determine if the user wants their README updated
+    update_readme = os.getenv("COMMIT_CHANGES", "false").lower() in ("true", "1", "yes")
+    # Get the README path
+    readme_path = os.getenv("README_PATH")
     # Read all code files in the project directory
     code = read_code_files(repo_path, file_extensions)
 
@@ -140,5 +181,10 @@ if __name__ == "__main__":
     code = truncate_code(code, max_tokens=code_len)
 
     # Analyze the code style
-    style_analysis = analyze_code_style(code, style_descriptions)
+    author_name, style_analysis = analyze_code_style(code, style_descriptions)
+    # Commit changes, if requested
+    if update_readme:
+        badge_url = generate_badge_url(author_name)
+        update_readme_with_badge(readme_path, badge_url)
+    print(author_name)
     print(style_analysis)

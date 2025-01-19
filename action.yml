@@ -7,12 +7,22 @@ inputs:
     description: 'File extensions to analyze (comma-separated)'
     required: true
     default: '.py,.js,.java'
+  readme-path:
+    description: 'Path to the README file to update'
+    required: false
+    default: 'README.md'
+  commit-changes:
+    description: 'Commit changes to the repository automatically (true/false)'
+    required: false
+    default: 'false'
 
 runs:
   using: docker
   image: Dockerfile
   env:
     FILE_EXTENSIONS: ${{ inputs.file-extensions }}
+    COMMIT_CHANGES: ${{ inputs.commit-changes }}
+    README_PATH: ${{ inputs.readme-path }}
   steps:
     - name: Check out repository
       uses: actions/checkout@v2
