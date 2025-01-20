@@ -1,8 +1,8 @@
-![StyleSpark](https://img.shields.io/badge/Guido%20van%20Rossum%20–%20Creator%20of%20Python-Guido%20van%20Rossum%20–%20Creator%20of%20Python?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
-
 # StyleSpark: Analyzing and Matching Code to Iconic Programming Styles using GitHub Actions
 
 ![GitHub Action Test](https://github.com/actions/hello-world-docker-action/actions/workflows/ci.yml/badge.svg)
+![StyleSpark](https://img.shields.io/badge/Guido%20van%20Rossum%20–%20Creator%20of%20Python-Guido%20van%20Rossum%20–%20Creator%20of%20Python?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
+
 
 
 This action prints `Hello, World!` or `Hello, <who-to-greet>!` to the log. To
