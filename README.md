@@ -59,11 +59,11 @@ jobs:
 
 ## Configuration Variables
 
-FILE_EXTENSIONS: A comma-separated list of file extensions to analyze. For example, "py,java,js" will analyze Python, Java, and JavaScript files. This variable tells StyleSpark which types of files to include in the analysis.
+**FILE_EXTENSIONS**: A comma-separated list of file extensions to analyze. For example, "py,java,js" will analyze Python, Java, and JavaScript files. This variable tells StyleSpark which types of files to include in the analysis.
 
-COMMIT_CHANGES: A boolean value ("true" or "false") that determines whether the changes should be automatically committed to the repository. If set to "true", StyleSpark will update the README file with the badge indicating the matched programming style and commit the changes. If set to "false", the changes will not be committed.
+**COMMIT_CHANGES**: A boolean value ("true" or "false") that determines whether the changes should be automatically committed to the repository. If set to "true", StyleSpark will update the README file with the badge indicating the matched programming style and commit the changes. If set to "false", the changes will not be committed.
 
-README_PATH: The path to the README file that should be updated with the badge. This variable specifies the location of the README file in your repository. For example, "README.md" indicates that the README file is located in the root directory of the repository.
+**README_PATH**: The path to the README file that should be updated with the badge. This variable specifies the location of the README file in your repository. For example, "README.md" indicates that the README file is located in the root directory of the repository.
 
 # Development
 
