@@ -1,7 +1,11 @@
 # StyleSpark: Analyzing and Matching Code to Iconic Programming Styles using GitHub Actions
 
 ![GitHub Action Test](https://github.com/actions/hello-world-docker-action/actions/workflows/ci.yml/badge.svg)
-![StyleSpark](https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
+![StyleSpark](https://img.shields.io/badge/**%20Guido%20van%20Rossum%20%20–%20Python%20Creator
+
+**-**%20Guido%20van%20Rossum%20%20–%20Python%20Creator
+
+**?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
 
 ## Overview
 
