@@ -7,7 +7,7 @@ code_len = 250
 # Initialize the GPT-4 All model
 def load_model():
     # Initialize the GPT-4 model. It will automatically download the model if it's not already present.
-    model = GPT4All("gpt4all-llama-1b")
+    model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf")
     return model
 
 # Step 2: Prompt the model and get a response
