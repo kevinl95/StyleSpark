@@ -88,8 +88,8 @@ def analyze_code_style(code):
     prompt = f"""
         Given the following list of programming styles, determine which one best matches the provided code snippet. Respond in the format:
 
-        Author: <Author's Name>
-        Explanation: <Detailed explanation of why this style matches>
+        Author:
+        Explanation:
 
         List of Styles:
         1. Grace Hopper – Compiler Pioneer
@@ -102,15 +102,27 @@ def analyze_code_style(code):
         4. Guido van Rossum – Python Creator
         Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
         5. Donald Knuth – TeX Creator
-        Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.        7. Tim Berners-Lee – Web Creator
+        Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.
+        6. Vint Cerf – Father of the Internet
+        Focus on modular, well-structured, and reusable components. Robust documentation and error handling with adherence to standards.
+        7. James Gosling – Java Creator
+        Object-oriented design with a focus on portability. Verbose syntax and clear separation of concerns.
+        8. Bjarne Stroustrup – C++ Creator
+        Code prioritizes efficiency and flexibility, with extensive use of object-oriented and generic programming features.
+        9. Ken Thompson – UNIX Creator
+        Simple, efficient code designed for quick execution. Modular design and focus on system-level efficiency.
+        10. Brian Kernighan – C Co-author
+            Clear, simple, and minimalistic code. Focus on small programs with precision and clarity.
+        11. Tim Berners-Lee – Web Creator
             Clean, simple, and modular code designed for interoperability and following standards for web technologies.
-        6. Margaret Hamilton – Software Engineering Pioneer
+        12. Margaret Hamilton – Software Engineering Pioneer
             Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
 
         Here is the code snippet:\n\n
         {code}\n\n
         Please provide the answer in the specified format:
     """
+    print(prompt)
     # Get the response from the model
     result = get_model_response(model, prompt)
     print(result)
