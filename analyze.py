@@ -2,7 +2,7 @@ import os
 import re
 from gpt4all import GPT4All
 
-code_len = 250
+code_len = 750
 
 # Initialize the GPT-4 All model
 def load_model():
@@ -122,15 +122,13 @@ def analyze_code_style(code):
         {code}\n\n
         Please provide the answer in the specified format:
     """
-    print(prompt)
     # Get the response from the model
     result = get_model_response(model, prompt)
-    print(result)
-    # Split the result into author and explanation
-    if ":" in result:
-        author, explanation = result.split(":", 1)
-        author = author.strip()
-        explanation = explanation.strip()
+    # Use regular expressions to extract the author and explanation
+    match = re.search(r"Author:\s*(.*?)\s*Explanation:\s*(.*)", result, re.DOTALL)
+    if match:
+        author = match.group(1).strip()
+        explanation = match.group(2).strip()
     else:
         author = "Unknown"
         explanation = "The model did not provide a clear author and explanation."
