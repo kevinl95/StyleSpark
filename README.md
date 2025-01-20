@@ -59,11 +59,11 @@ jobs:
 
 ## Configuration Variables
 
-**FILE_EXTENSIONS**: A comma-separated list of file extensions to analyze. For example, "py,java,js" will analyze Python, Java, and JavaScript files. This variable tells StyleSpark which types of files to include in the analysis.
-
-**COMMIT_CHANGES**: A boolean value ("true" or "false") that determines whether the changes should be automatically committed to the repository. If set to "true", StyleSpark will update the README file with the badge indicating the matched programming style and commit the changes. If set to "false", the changes will not be committed.
-
-**README_PATH**: The path to the README file that should be updated with the badge. This variable specifies the location of the README file in your repository. For example, "README.md" indicates that the README file is located in the root directory of the repository.
+| Configuration | Description | Example | Required |
+|--------------|-------------|---------|----------|
+| `FILE_EXTENSIONS` | Comma-separated list of file extensions to analyze. StyleSpark will scan all files with these extensions in your repository. | `"py,java,js"` | Yes |
+| `COMMIT_CHANGES` | Boolean value that determines whether StyleSpark should automatically commit changes to your README. If `true`, a badge will be added or updated in your README showing your matched programming style. | `"true"` or `"false"` | No (defaults to `"false"`) |
+| `README_PATH` | Path to your README file relative to the repository root. This is where StyleSpark will add or update the style badge. | `"README.md"` or `"docs/README.md"` | No (defaults to `'README.md'`) |
 
 # Development
 
@@ -87,6 +87,18 @@ docker build -t stylespark .
 ```bash
 docker run --rm -v $(pwd):/repo stylespark
 ```
+
+# Example Output
+```
+Author: Guido van Rossum
+Explanation: Code emphasizes readability with clear function names and docstrings...
+```
+# Troubleshooting
+**Badge not appearing**: Ensure COMMIT_CHANGES is set to "true"
+
+**No style match**: Check that FILE_EXTENSIONS includes your primary code files
+
+**Permission errors**: Verify workflow has write permissions enabled
 
 # Contributing
 
