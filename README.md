@@ -5,7 +5,7 @@
 
 ## Overview
 
-StyleSpark is a GitHub Action that analyzes code snippets and matches them to the coding styles of iconic programmers. By leveraging machine learning models, StyleSpark provides insights into which famous programmer's style your code most closely resembles.
+StyleSpark is a GitHub Action that analyzes code snippets and matches them to the coding styles of iconic programmers. You'll be able to get a snazzy badge for your repository- an example is above! By leveraging large language models (particuarly Llama 3), StyleSpark provides insights into which famous programmer's style your code most closely resembles. Use this as a fun tool to explore computing's heros, share a bit about your coding style with the community, or motivate yourself to change up how you write your code!
 
 ## Features
 
