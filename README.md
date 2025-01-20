@@ -15,18 +15,21 @@ StyleSpark is a GitHub Action that analyzes code snippets and matches them to th
 
 ## Supported Programming Styles
 
-1. Grace Hopper – Compiler Pioneer
-2. Ada Lovelace – First Programmer
-3. Linus Torvalds – Creator of Linux
-4. Guido van Rossum – Python Creator
-5. Donald Knuth – TeX Creator
-6. Vint Cerf – Father of the Internet
-7. James Gosling – Java Creator
-8. Bjarne Stroustrup – C++ Creator
-9. Ken Thompson – UNIX Creator
-10. Brian Kernighan – C Co-author
-11. Tim Berners-Lee – Web Creator
-12. Margaret Hamilton – Software Engineering Pioneer
+| No. | Programmer                  | Description                          | Style Characteristics                                                                 |
+|-----|-----------------------------|--------------------------------------|---------------------------------------------------------------------------------------|
+| 1   | [Grace Hopper](https://en.wikipedia.org/wiki/Grace_Hopper)                | Compiler Pioneer                     | Focus on readability, with extensive comments and descriptive names. Modular and structured for ease of maintenance. Known for COBOL, emphasizing readability and documentation. |
+| 2   | [Ada Lovelace](https://en.wikipedia.org/wiki/Ada_Lovelace)                | First Programmer                     | Focus on logical precision, algorithmic clarity, and mathematical elegance. Abstract, rigorous, and concise algorithms. |
+| 3   | [Linus Torvalds](https://en.wikipedia.org/wiki/Linus_Torvalds)              | Creator of Linux                     | Minimalist, performance-focused code with short, simple functions. Few comments, prioritizing efficiency and pragmatism. |
+| 4   | [Guido van Rossum](https://en.wikipedia.org/wiki/Guido_van_Rossum)            | Python Creator                       | Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well. |
+| 5   | [Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth)                | TeX Creator                          | Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms. |
+| 6   | [Vint Cerf](https://en.wikipedia.org/wiki/Vint_Cerf)                   | Father of the Internet               | Focus on modular, well-structured, and reusable components. Robust documentation and error handling with adherence to standards. |
+| 7   | [James Gosling](https://en.wikipedia.org/wiki/James_Gosling)               | Java Creator                         | Object-oriented design with a focus on portability. Verbose syntax and clear separation of concerns. |
+| 8   | [Bjarne Stroustrup](https://en.wikipedia.org/wiki/Bjarne_Stroustrup)           | C++ Creator                          | Code prioritizes efficiency and flexibility, with extensive use of object-oriented and generic programming features. |
+| 9   | [Ken Thompson](https://en.wikipedia.org/wiki/Ken_Thompson)                | UNIX Creator                         | Simple, efficient code designed for quick execution. Modular design and focus on system-level efficiency. |
+| 10  | [Brian Kernighan](https://en.wikipedia.org/wiki/Brian_Kernighan)             | C Co-author                          | Clear, simple, and minimalistic code. Focus on small programs with precision and clarity. |
+| 11  | [Tim Berners-Lee](https://en.wikipedia.org/wiki/Tim_Berners-Lee)             | Web Creator                          | Clean, simple, and modular code designed for interoperability and following standards for web technologies. |
+| 12  | [Margaret Hamilton](https://en.wikipedia.org/wiki/Margaret_Hamilton_(software_engineer))           | Software Engineering Pioneer         | Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems. |
+
 
 ## Usage
 
