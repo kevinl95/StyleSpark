@@ -2,7 +2,7 @@ import os
 import re
 from gpt4all import GPT4All
 
-code_len = 750
+code_len = 500
 
 # Initialize the GPT-4 All model
 def load_model():
@@ -86,41 +86,41 @@ def analyze_code_style(code):
     model = load_model()
     # Create the prompt with style descriptions and code
     prompt = f"""
-        Given the following list of programming styles, determine which one best matches the provided code snippet. Respond in the format:
-
-        Author:
-        Explanation:
+        Given the following list of programming styles, determine which one best matches the provided code snippet.
 
         List of Styles:
-        1. Grace Hopper – Compiler Pioneer
+        Grace Hopper – Compiler Pioneer
         Focus on readability, with extensive comments and descriptive names. Code is modular, structured for ease of maintenance.
         Known for COBOL, a language emphasizing readability and documentation.
-        2. Ada Lovelace – First Programmer
+        Ada Lovelace – First Programmer
         Focus on logical precision, algorithmic clarity, and mathematical elegance. Her algorithms were abstract, rigorous, and concise.
-        3. Linus Torvalds – Creator of Linux
+        Linus Torvalds – Creator of Linux
         Minimalist, performance-focused code with short, simple functions. Few comments, prioritizing efficiency and pragmatism.
-        4. Guido van Rossum – Python Creator
+        Guido van Rossum – Python Creator
         Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
-        5. Donald Knuth – TeX Creator
+        Donald Knuth – TeX Creator
         Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.
-        6. Vint Cerf – Father of the Internet
+        Vint Cerf – Father of the Internet
         Focus on modular, well-structured, and reusable components. Robust documentation and error handling with adherence to standards.
-        7. James Gosling – Java Creator
+        James Gosling – Java Creator
         Object-oriented design with a focus on portability. Verbose syntax and clear separation of concerns.
-        8. Bjarne Stroustrup – C++ Creator
+        Bjarne Stroustrup – C++ Creator
         Code prioritizes efficiency and flexibility, with extensive use of object-oriented and generic programming features.
-        9. Ken Thompson – UNIX Creator
+        Ken Thompson – UNIX Creator
         Simple, efficient code designed for quick execution. Modular design and focus on system-level efficiency.
-        10. Brian Kernighan – C Co-author
-            Clear, simple, and minimalistic code. Focus on small programs with precision and clarity.
-        11. Tim Berners-Lee – Web Creator
-            Clean, simple, and modular code designed for interoperability and following standards for web technologies.
-        12. Margaret Hamilton – Software Engineering Pioneer
-            Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
+        Brian Kernighan – C Co-author
+        Clear, simple, and minimalistic code. Focus on small programs with precision and clarity.
+        Tim Berners-Lee – Web Creator
+        Clean, simple, and modular code designed for interoperability and following standards for web technologies.
+        Margaret Hamilton – Software Engineering Pioneer
+        Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
 
         Here is the code snippet:\n\n
         {code}\n\n
         Please provide the answer in the specified format:
+
+        Author:
+        Explanation:
     """
     # Get the response from the model
     result = get_model_response(model, prompt)
