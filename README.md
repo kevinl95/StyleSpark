@@ -61,7 +61,7 @@ jobs:
 
 | Configuration | Description | Example | Required |
 |--------------|-------------|---------|----------|
-| `FILE_EXTENSIONS` | Comma-separated list of file extensions to analyze. StyleSpark will scan all files with these extensions in your repository. | `"py,java,js"` | Yes |
+| `FILE_EXTENSIONS` | Comma-separated list of file extensions to analyze. StyleSpark will scan all files with these extensions in your repository. | `".py,.java,.js"` | Yes |
 | `COMMIT_CHANGES` | Boolean value that determines whether StyleSpark should automatically commit changes to your README. If `true`, a badge will be added or updated in your README showing your matched programming style. | `"true"` or `"false"` | No (defaults to `"false"`) |
 | `README_PATH` | Path to your README file relative to the repository root. This is where StyleSpark will add or update the style badge. | `"README.md"` or `"docs/README.md"` | No (defaults to `'README.md'`) |
 
