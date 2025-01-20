@@ -1,113 +1,96 @@
 # StyleSpark: Analyzing and Matching Code to Iconic Programming Styles using GitHub Actions
 
 ![GitHub Action Test](https://github.com/actions/hello-world-docker-action/actions/workflows/ci.yml/badge.svg)
-![StyleSpark](https://img.shields.io/badge/Guido%20van%20Rossum%20–%20Creator%20of%20Python-Guido%20van%20Rossum%20–%20Creator%20of%20Python?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
+![StyleSpark](https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
 
+## Overview
 
+StyleSpark is a GitHub Action that analyzes code snippets and matches them to the coding styles of iconic programmers. By leveraging machine learning models, StyleSpark provides insights into which famous programmer's style your code most closely resembles.
 
-This action prints `Hello, World!` or `Hello, <who-to-greet>!` to the log. To
-learn how this action was built, see
-[Creating a Docker container action](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action).
-Hello, World! Docker Action
-## Create Your Own Action
+## Features
 
-To create your own action, you can use this repository as a template! Just
-follow the below instructions:
+- **Code Analysis**: Analyzes code snippets to determine their stylistic attributes.
+- **Style Matching**: Matches code to the styles of iconic programmers such as Grace Hopper, Ada Lovelace, Linus Torvalds, and more.
+- **Badge Generation**: Automatically updates the README with a badge indicating the matched programming style.
 
-1. Click the **Use this template** button at the top of the repository
-1. Select **Create a new repository**
-1. Select an owner and name for your new repository
-1. Click **Create repository**
-1. Clone your new repository
+## Supported Programming Styles
 
-> [!CAUTION]
->
-> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
-> details on how to use this file, see
-> [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
+1. Grace Hopper – Compiler Pioneer
+2. Ada Lovelace – First Programmer
+3. Linus Torvalds – Creator of Linux
+4. Guido van Rossum – Python Creator
+5. Donald Knuth – TeX Creator
+6. Vint Cerf – Father of the Internet
+7. James Gosling – Java Creator
+8. Bjarne Stroustrup – C++ Creator
+9. Ken Thompson – UNIX Creator
+10. Brian Kernighan – C Co-author
+11. Tim Berners-Lee – Web Creator
+12. Margaret Hamilton – Software Engineering Pioneer
 
 ## Usage
 
-Here's an example of how to use this action in a workflow file:
+To use StyleSpark in your GitHub repository, follow these steps:
+
+**Create a Workflow File**: Add a new workflow file in your repository's `.github/workflows` directory.
 
 ```yaml
-name: Example Workflow
+name: StyleSpark Analysis
 
 on:
-  workflow_dispatch:
-    inputs:
-      who-to-greet:
-        description: Who to greet in the log
-        required: true
-        default: 'World'
-        type: string
+  push:
+    branches:
+      - main
 
 jobs:
-  say-hello:
-    name: Say Hello
+  analyze-code:
     runs-on: ubuntu-latest
-
     steps:
-      # Change @main to a specific commit SHA or version tag, e.g.:
-      # actions/hello-world-docker-action@e76147da8e5c81eaf017dede5645551d4b94427b
-      # actions/hello-world-docker-action@v1.2.3
-      - name: Print to Log
-        id: print-to-log
-        uses: actions/hello-world-docker-action@main
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run StyleSpark
+        uses: kevinl95/StyleSpark@main
         with:
-          who-to-greet: ${{ inputs.who-to-greet }}
+          FILE_EXTENSIONS: "py,java,js"
+          COMMIT_CHANGES: "true"
+          README_PATH: "README.md"
 ```
 
-For example workflow runs, check out the
-[Actions tab](https://github.com/actions/hello-world-docker-action/actions)!
-:rocket:
+## Configuration Variables
 
-## Inputs
+FILE_EXTENSIONS: A comma-separated list of file extensions to analyze. For example, "py,java,js" will analyze Python, Java, and JavaScript files. This variable tells StyleSpark which types of files to include in the analysis.
 
-| Input          | Default | Description                     |
-| -------------- | ------- | ------------------------------- |
-| `who-to-greet` | `World` | The name of the person to greet |
+COMMIT_CHANGES: A boolean value ("true" or "false") that determines whether the changes should be automatically committed to the repository. If set to "true", StyleSpark will update the README file with the badge indicating the matched programming style and commit the changes. If set to "false", the changes will not be committed.
 
-## Outputs
+README_PATH: The path to the README file that should be updated with the badge. This variable specifies the location of the README file in your repository. For example, "README.md" indicates that the README file is located in the root directory of the repository.
 
-| Output | Description             |
-| ------ | ----------------------- |
-| `time` | The time we greeted you |
+# Development
 
-## Test Locally
+To develop and test StyleSpark locally, follow these steps:
 
-After you've cloned the repository to your local machine or codespace, you'll
-need to perform some initial setup steps before you can test your action.
+## Clone the Repository:
 
-> [!NOTE]
->
-> You'll need to have a reasonably modern version of
-> [Docker](https://www.docker.com/get-started/) handy (e.g. docker engine
-> version 20 or later).
+```bash
+git clone https://github.com/kevinl95/StyleSpark.git
+cd StyleSpark
+```
 
-1. :hammer_and_wrench: Build the container
+## Build the Docker Image:
 
-   Make sure to replace `actions/hello-world-docker-action` with an appropriate
-   label for your container.
+```bash
+docker build -t stylespark .
+```
 
-   ```bash
-   docker build -t actions/hello-world-docker-action .
-   ```
+## Run the Docker Container:
 
-1. :white_check_mark: Test the container
+```bash
+docker run --rm -v $(pwd):/repo stylespark
+```
 
-   You can pass individual environment variables using the `--env` or `-e` flag.
+# Contributing
 
-   ```bash
-   $ docker run --env INPUT_WHO_TO_GREET="Mona Lisa Octocat" actions/hello-world-docker-action
-   ::notice file=entrypoint.sh,line=7::Hello, Mona Lisa Octocat!
-   ```
+Contributions are welcome! Please open an issue or submit a pull request with your changes.
 
-   Or you can pass a file with environment variables using `--env-file`.
-
-   ```bash
-   $ echo "INPUT_WHO_TO_GREET=\"Mona Lisa Octocat\"" > ./.env.test
-
-   $ docker run --env-file ./.env.test actions/hello-world-docker-action
-   ::notice file=entrypoint.sh,line=7::Hello, Mona Lisa Octocat!
-   ```
+# License
+This project is licensed under the MIT License. See the LICENSE file for details.
