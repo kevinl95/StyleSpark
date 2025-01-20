@@ -1,4 +1,4 @@
-![StyleSpark](https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
+![StyleSpark](https://img.shields.io/badge/-?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC)
 
 # StyleSpark: Analyzing and Matching Code to Iconic Programming Styles using GitHub Actions
 
