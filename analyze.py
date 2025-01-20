@@ -127,7 +127,8 @@ def analyze_code_style(code):
     # Use regular expressions to extract the author and explanation
     match = re.search(r"Author:\s*(.*?)\s*Explanation:\s*(.*)", result, re.DOTALL)
     if match:
-        author = match.group(1).strip()
+        raw_author = match.group(1).strip()
+        author = re.sub(r'[\*\n]+', '', raw_author)
         explanation = match.group(2).strip()
     else:
         author = "Unknown"
