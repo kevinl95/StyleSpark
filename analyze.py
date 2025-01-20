@@ -1,48 +1,40 @@
 import os
 import re
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from gpt4all import GPT4All
 
 code_len = 250
 
+# Initialize the GPT-4 All model
+def load_model():
+    # Initialize the GPT-4 model. It will automatically download the model if it's not already present.
+    model = GPT4All("gpt4all-llama-1b")
+    return model
+
+# Step 2: Prompt the model and get a response
+def get_model_response(model, prompt):
+    # Run the model to generate a response for the given prompt
+    response = model.generate(prompt)
+    return response
 
 def read_code_files(repo_path, file_extensions, max_tokens=code_len):
     """Read all code files and return the code content, stopping when enough code is collected."""
     code = ""
-    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-
     for root, _, files in os.walk(repo_path):
         for file in files:
             if any(file.endswith(ext) for ext in file_extensions):
                 with open(os.path.join(root, file), "r") as f:
                     code += f.read() + "\n"
-                    # Tokenize the current code and check the token count
-                    encoded_code = tokenizer.encode(code, return_tensors="pt")
-                    num_tokens = encoded_code.shape[-1]
-
-                    # If the code exceeds the max_tokens, stop reading files
-                    if num_tokens > max_tokens:
-                        return code
-    return code
-
+                    # Check the length of the current code
+                    if len(code) > max_tokens:
+                        return code[:max_tokens]
+    return code[:max_tokens]
 
 def truncate_code(code, max_tokens):
     """Truncate code to fit within the max token length."""
-    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-    encoded_code = tokenizer.encode(code, return_tensors="pt")
-
-    if encoded_code.shape[-1] > max_tokens:
-        print(f"Truncating code to fit within {max_tokens} tokens.")
-        return tokenizer.decode(encoded_code[0][:max_tokens], skip_special_tokens=True)
-
+    if len(code) > max_tokens:
+        print(f"Truncating code to fit within {max_tokens} characters.")
+        return code[:max_tokens]
     return code
-
-def truncate_text(text, max_tokens):
-    """
-    Truncate a text to fit within the maximum number of tokens.
-    """
-    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-    tokens = tokenizer.encode(text, add_special_tokens=False)
-    return tokenizer.decode(tokens[:max_tokens])
 
 def generate_badge_url(author_name):
     base_url = "https://img.shields.io/badge/Author-Author?style=flat&label=StyleSpark&labelColor=%232111a4&color=%23CFD8DC"
@@ -90,67 +82,38 @@ def analyze_code_style(code):
     Returns:
         tuple: The style author and the explanation that most closely matches the code.
     """
-    # Load GPT-2 model and tokenizer
-    model_name = "gpt2"
-    tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-    model = GPT2LMHeadModel.from_pretrained(model_name)
-
-    # Set the pad token to eos token
-    tokenizer.pad_token = tokenizer.eos_token
-    max_prompt_tokens = 1024
+    # Initialize model
+    model = load_model()
     # Create the prompt with style descriptions and code
     prompt = f"""
-    Based on the following code snippet, identify which famous programmer's coding style it most closely resembles. Provide the name of the programmer and a brief explanation of why their style matches the code.
+        Given the following list of programming styles, determine which one best matches the provided code snippet. Respond in the format:
 
-    Author: <Author's Name>
-    Explanation: <Explanation of why the author's style matches the code>
+        Author: <Author's Name>
+        Explanation: <Detailed explanation of why this style matches>
 
-    Here is the code snippet:
-    {code}
+        List of Styles:
+        1. Grace Hopper – Compiler Pioneer
+        Focus on readability, with extensive comments and descriptive names. Code is modular, structured for ease of maintenance.
+        Known for COBOL, a language emphasizing readability and documentation.
+        2. Ada Lovelace – First Programmer
+        Focus on logical precision, algorithmic clarity, and mathematical elegance. Her algorithms were abstract, rigorous, and concise.
+        3. Linus Torvalds – Creator of Linux
+        Minimalist, performance-focused code with short, simple functions. Few comments, prioritizing efficiency and pragmatism.
+        4. Guido van Rossum – Python Creator
+        Code should be clear, simple, and easy to understand. Emphasis on readability and explicitness, with functions that do one thing well.
+        5. Donald Knuth – TeX Creator
+        Detailed documentation and mathematical rigor. Pedantic formatting with highly structured, well-documented algorithms.        7. Tim Berners-Lee – Web Creator
+            Clean, simple, and modular code designed for interoperability and following standards for web technologies.
+        6. Margaret Hamilton – Software Engineering Pioneer
+            Safety-focused, with extensive error handling and documentation. Prioritizes reliability in high-stakes systems.
+
+        Here is the code snippet:\n\n
+        {code}\n\n
+        Please provide the answer in the specified format:
     """
-    print(prompt)
-    # Truncate code snippet if necessary
-    max_code_tokens = max_prompt_tokens - len(GPT2Tokenizer.from_pretrained("gpt2").encode(prompt))
-    truncated_code = truncate_text(code, max_code_tokens)
-
-    # Replace code snippet in prompt
-    final_prompt = prompt.replace(code, truncated_code)
-    # Encode the prompt to count tokens
-    inputs = tokenizer.encode_plus(
-        final_prompt,
-        return_tensors="pt",
-        max_length=1024 - 150,
-        truncation=True,  # Ensure the input is within the model's limits
-    )
-
-    # Check the number of tokens to ensure we're within the limit
-    num_tokens = inputs["input_ids"].shape[-1]
-    print(num_tokens)
-    # If the prompt exceeds the token limit, truncate it accordingly
-    if num_tokens > 1024:
-        print(
-            f"Warning: Prompt exceeds token limit with {num_tokens} tokens. Truncating..."
-        )
-        truncated_tokens = inputs["input_ids"][0][:1024]
-        prompt = tokenizer.decode(truncated_tokens, skip_special_tokens=True)
-        inputs = tokenizer.encode_plus(
-            prompt, return_tensors="pt", truncation=True, padding="max_length"
-        )
-
-    # Generate the response
-    outputs = model.generate(
-        inputs["input_ids"],
-        attention_mask=inputs["attention_mask"],
-        max_new_tokens=150,  # Generate up to 75 new tokens
-        num_return_sequences=1,
-        repetition_penalty=2.0,  # Penalize repetitive phrases
-    )
-
-    # Decode and process the response
-    result = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    # Get the response from the model
+    result = get_model_response(model, prompt)
     print(result)
-    # Post-process result to extract a meaningful answer
-    result = result.replace(prompt, "").strip()
     # Split the result into author and explanation
     if ":" in result:
         author, explanation = result.split(":", 1)
